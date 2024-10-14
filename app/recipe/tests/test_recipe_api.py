@@ -11,6 +11,7 @@ RECIPES_URL = reverse('recipe:recipe-list')
 
 def create_recipe(user, **params):
     "create and return a sample recipe"
+    print("Raw data needs to create recipe", f"{param}")
     defaults = {
             'title':'sample recipe title',
             'time_minutes':22,
@@ -31,6 +32,7 @@ class PublicRecipeAPItests(TestCase):
     def test_auth_required(self):
         "Test auth required to call api"
         res = self.client.get(RECIPES_URL)
+        print(f"{res}")
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
 class PrivateRecipeAPITests(TestCase):
