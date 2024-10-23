@@ -11,7 +11,6 @@ RECIPES_URL = reverse('recipe:recipe-list')
 
 def create_recipe(user, **params):
     "create and return a sample recipe"
-    print("Raw data needs to create recipe", f"{param}")
     defaults = {
             'title':'sample recipe title',
             'time_minutes':22,
