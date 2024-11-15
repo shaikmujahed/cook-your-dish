@@ -30,6 +30,8 @@ def create_recipe(user, **params):
 
 def create_user(**params):
     """Create and return a new user"""
+    recipe = Recipe.objects.create(user=user,**defaults)
+    return recipe
     return get_user_model().objects.create_user(**params)
 
 
