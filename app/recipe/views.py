@@ -30,7 +30,7 @@ class RecipeViewset(viewsets.ModelViewset):
             return serializers.RecipeSerializer
         return serializer_class
 
-class IngredientViewset(mixins.ListModelMixin, mixins.UpdateModelMixin,viewsets.GenericViewset):
+class IngredientViewset(mixins.ListModelMixin, mixins.UpdateModelMixin,mixins.DestroyModelMixin,viewsets.GenericViewset):
     """Manage ingredient in database"""
     serializer_class = serializers.IngredientSerializer
     queryset = Ingredient.objects.all()
