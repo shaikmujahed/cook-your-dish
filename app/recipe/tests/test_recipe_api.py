@@ -1,10 +1,11 @@
+from decimal import Decimal
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse()
 
 from rest_framework import status
 from rest_framework.test import APIClient
-from core.model import Recipe
+from core.model import Recipe, Ingredient
 from recipe.serializers import (RecipeSerializer,RecipeDetailSerializer,)
 
 RECIPES_URL = reverse('recipe:recipe-list')
@@ -97,5 +98,55 @@ class PrivateRecipeAPITests(TestCase):
         for k,v in payload.items():
             self.assertEqual(getattr(recipe,k),v)
         self.assertEqual(recipe.user, self.user)
+
+     def create_recipe_with_new_ingredient(self):
+         """Test creating recipe with new ingredient"""
+         payload = {
+             'title':'califlowerTacos',
+             'time_minutes':60,
+             'price':Decimal('4.30'),
+             'ingredients':[
+                 {
+                     'name':'califlower',
+                 },
+                 {
+                     'name':'salt',
+                 }
+             ]
+         }
+         res = self.client.post(RECIPES_URL, payload, format='json')
+         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+         recipes = Recipe.objects.filtter(user=self.user)
+         self.assertEqual(recipes.count(),1)
+         recipe = recipes[0]
+         self.assertEqual(recipe.ingredients.count(),2)
+
+         for ingredient in payload['ingredients']:
+             exists = recipe.ingredients.filtter(
+                 name = ingredient['name'],
+                 user = self.user,
+             ).exists()
+             self.assertTrue(exists)
+
+     def create_recipe_with_existing_ingredient(self):
+         """Test create new recipe with existing ingredient"""
+         ingredient = Ingredient.objects.create(user=self.user, name='lemon')
+         payload = {
+             'title':'vientramese',
+             'time_minutes':25,
+             'price':Decimal('2.22'),
+             'ingredients':[
+                 {
+                     'name':'lemon',
+                 },
+                 {
+                     'name':'fish sauce',
+                 }
+             ]
+         }
+             
+         }
+         
+         
 
 
