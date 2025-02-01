@@ -1,6 +1,10 @@
 #Views for the recipe APIs
 
-from rest_framework import viewsets
+from rest_framework import (
+viewsets,
+mixins,
+status
+)
 from rest_framework.decorators import action
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -26,7 +30,7 @@ class RecipeViewset(viewsets.ModelViewset):
             return serializers.RecipeSerializer
         return serializer_class
 
-class IngredientViewset(mixins.ListModelMixin, viewsets.GenericViewset):
+class IngredientViewset(mixins.ListModelMixin, mixins.UpdateModelMixin,viewsets.GenericViewset):
     """Manage ingredient in database"""
     serializer_class = serializers.IngredientSerializer
     queryset = Ingredient.objects.all()
